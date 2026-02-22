@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F0F4F8"
+    android:padding="20dp">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_glass"
+        android:elevation="4dp"
+        android:padding="16dp"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/tvQRTitle"
+            android:text="رمز التعريف"
+            android:textSize="22sp"
+            android:textColor="#1E2A3A"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnCloseQR"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="✕"
+            android:background="@drawable/btn_glass"
+            android:textColor="#E74C3C"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- Container for Camera Preview or QR Image -->
+    <FrameLayout
+        android:id="@+id/qrContainer"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_glass"
+        android:elevation="2dp"
+        android:layout_marginBottom="20dp">
+
+        <!-- Camera Preview (for scanning) will be added programmatically -->
+        <!-- QR Image (for display) will be added programmatically -->
+    </FrameLayout>
+
+    <!-- Info Text -->
+    <TextView
+        android:id="@+id/tvQRInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ضع رمز QR داخل الإطار للمسح"
+        android:textColor="#7F8C8D"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnQRPrimary"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="بدء المسح"
+            android:background="@drawable/btn_gradient"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnQRSecondary"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="إلغاء"
+            android:background="@drawable/btn_glass"
+            android:textColor="#1E2A3A" />
+    </LinearLayout>
+
+    <!-- Manual Entry -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="أو أدخل الرمز يدوياً:"
+        android:textColor="#7F8C8D"
+        android:textSize="12sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etManualCode"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_glass"
+        android:padding="12dp"
+        android:hint="الصق الرمز هنا"
+        android:textColor="#1E2A3A"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnUseManual"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="استخدام الرمز"
+        android:background="@drawable/btn_gradient"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

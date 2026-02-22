@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DronTalk</string>
+    <string name="ok">تم</string>
+    <string name="cancel">إلغاء</string>
+    <string name="save">حفظ</string>
+    <string name="call">اتصال</string>
+    <string name="end_call">إنهاء المكالمة</string>
+</resources>

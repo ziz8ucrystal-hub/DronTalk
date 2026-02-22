@@ -1,0 +1,4 @@
+-ignorewarnings
+-dontwarn
+-dontnote
+-keep class org.webrtc.** { *; }
