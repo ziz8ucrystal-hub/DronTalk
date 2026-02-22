@@ -19,17 +19,19 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Go to isolade directory
+        run: cd isolade && pwd
       
       - name: Grant execute permission
-        run: chmod +x gradlew
+        run: chmod +x isolade/gradlew
       
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run: |
+          cd isolade
+          ./gradlew assembleDebug
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: isolade-APK
-          path: app/build/outputs/apk/debug/*.apk
+          path: isolade/app/build/outputs/apk/debug/*.apk
