@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Oasis Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --steam-bg: #171a21;
+            --steam-blue: #1b2838;
+            --steam-light-blue: #66c0f4;
+        }
+        
+        body {
+            font-family: 'Inter', 'Tajawal', sans-serif;
+            background-color: var(--steam-bg);
+            color: #c7d5e0;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .page-layer {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 10;
+        }
+
+        .layer-hidden { transform: translateY(100%); opacity: 0; pointer-events: none; }
+        .layer-blurred { filter: blur(20px) brightness(0.4); transform: scale(0.95); pointer-events: none; }
+
+        .steam-gradient { background: linear-gradient(to bottom, #1b2838 0%, #171a21 100%); }
+        
+        .minimal-btn { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; border-radius: 12px; position: relative; overflow: hidden; }
+        .btn-blue { background: linear-gradient(to right, #47bfff, #1a44c2); color: white; }
+        .btn-green { background: linear-gradient(to bottom, #75b022, #588a1b); color: white; }
+        .btn-red { background: linear-gradient(to bottom, #e33e3e, #b91c1c); color: white; }
+
+        .steam-input {
+            background: rgba(42, 61, 74, 0.8);
+            border-radius: 14px;
+            border: 1px solid rgba(0,0,0,0.3);
+            color: white;
+            padding: 16px;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            text-align: center;
+        }
+
+        /* سبينر صغير */
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        /* سبينر التحميل الأولي (أزرق) */
+        .initial-loader {
+            border-top-color: var(--steam-light-blue);
+            border-width: 2px;
+        }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease;
+        }
+
+        .price-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .game-cover-bg {
+            background-image: url('RedDeadRedemption.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .profile-pic-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--steam-light-blue);
+            margin: 0 auto 15px;
+            display: block;
+            background: #1b2838;
+        }
+    </style>
+</head>
+<body onclick="playClickSound()">
+
+    <!-- التحميل الأولي (3 ثوانٍ) -->
+    <div id="initialLoader" class="loading-screen">
+        <div class="loader initial-loader"></div>
+    </div>
+
+    <!-- واجهة الدخول -->
+    <div id="layerAuth" class="page-layer steam-gradient justify-center p-10 opacity-0 transition-opacity duration-700" style="pointer-events: none;">
+        <div class="max-w-xs mx-auto w-full text-center">
+            <div class="mb-10">
+                <!-- لوجو GitHub -->
+                <svg class="w-14 h-14 fill-white mx-auto mb-6 opacity-90" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                <div class="text-white text-xl font-black tracking-tight leading-tight">
+                    Oasis | ziz8u<br>
+                    <span class="text-sky-400 text-sm font-bold uppercase tracking-[0.2em]">Access</span>
+                </div>
+            </div>
+            
+            <div class="space-y-4 mb-10">
+                <input type="text" id="regUser" placeholder="Username" class="steam-input">
+                <input type="password" id="regPass" placeholder="Password" class="steam-input">
+            </div>
+
+            <button onclick="submitAuth()" id="authBtn" class="btn-blue w-full py-4 minimal-btn shadow-xl flex items-center justify-center">
+                <span id="authBtnText">Enter Store</span>
+                <div id="authBtnLoader" class="loader hidden"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- واجهة المتجر الرئيسية -->
+    <div id="layer2" class="page-layer layer-hidden steam-gradient">
+        <header class="p-4 flex justify-between items-center bg-[#171a21]/80 backdrop-blur-md sticky top-0 z-50 border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 fill-white/80" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                <h1 class="text-[11px] font-black tracking-[0.15em] text-white uppercase opacity-90">Oasis | ziz8u</h1>
+            </div>
+            <div class="flex items-center gap-3" onclick="openProfile();">
+                <span id="displayUser" class="text-[10px] text-sky-400 font-bold tracking-tight">user</span>
+                <div id="headerAvatarContainer" class="w-9 h-9 rounded-full bg-gradient-to-br from-sky-400 to-blue-600 p-[1.5px] cursor-pointer">
+                    <img id="headerAvatar" src="" class="w-full h-full rounded-full object-cover hidden">
+                    <div id="headerAvatarPlaceholder" class="w-full h-full rounded-full bg-[#1b2838] flex items-center justify-center">
+                         <svg class="w-5 h-5 text-sky-400/40" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-5 overflow-y-auto relative pb-40">
+            <h3 class="text-[10px] font-bold text-sky-400/60 mb-4 uppercase tracking-[0.2em]">Game List</h3>
+            
+            <div class="rounded-[24px] overflow-hidden shadow-2xl border border-white/5 bg-black/20 mb-10">
+                <div class="game-cover-bg w-full h-52 relative">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1b2838] via-transparent to-transparent"></div>
+                </div>
+                <div class="p-5 bg-[#1b2838]">
+                    <h2 class="text-xl font-black text-white mb-1 tracking-tight italic">Red Dead Redemption</h2>
+                    <p class="text-[9px] text-gray-500 mb-5 uppercase tracking-widest">Oasis Mobile Port</p>
+                    <button onclick="openLayer3()" class="btn-blue w-full py-3.5 minimal-btn rounded-xl shadow-lg">View Product</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- واجهة البروفايل -->
+    <div id="layerProfile" class="page-layer layer-hidden steam-gradient rounded-t-[35px] shadow-2xl border-t border-sky-500/20">
+        <div class="p-8 flex-1 overflow-y-auto">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-xl font-black text-white tracking-widest uppercase italic">Profile</h2>
+                <button onclick="closeProfile()" class="text-gray-500 text-xl">✕</button>
+            </div>
+
+            <div class="text-center mb-10">
+                <div class="relative inline-block">
+                    <img id="profilePreview" src="" class="profile-pic-preview hidden">
+                    <div id="profilePlaceholder" class="profile-pic-preview flex items-center justify-center bg-sky-900/20">
+                         <svg class="w-10 h-10 text-sky-400/40" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+                    </div>
+                    <label class="absolute bottom-0 right-0 bg-sky-500 p-2 rounded-full cursor-pointer shadow-lg">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="handleAvatarChange(event)">
+                    </label>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <input type="text" id="editUsername" class="steam-input" placeholder="Nickname">
+                <button onclick="saveProfile()" class="btn-blue w-full py-4 minimal-btn">Apply</button>
+                <button onclick="logout()" class="btn-red w-full py-4 minimal-btn opacity-80 mt-10">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- واجهة التفاصيل -->
+    <div id="layer3" class="page-layer layer-hidden steam-gradient rounded-t-[35px] shadow-2xl border-t border-white/10">
+        <div class="p-8 flex-1 overflow-y-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black text-white tracking-tighter italic">R.D.R</h2>
+                <button onclick="closeLayer(3)" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400">✕</button>
+            </div>
+            <div class="game-cover-bg w-full h-48 rounded-[25px] shadow-2xl mb-8 border border-white/5"></div>
+            <div class="space-y-4">
+                <div class="price-card">
+                    <div class="flex-1">
+                        <span class="text-white text-[10px] font-bold opacity-50 uppercase block">License</span>
+                        <span class="text-white text-sm font-black tracking-tight">Digital Access</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-black/40 rounded-xl p-1 pr-3">
+                        <span class="text-white text-xs font-black">14.99€</span>
+                        <button onclick="openPayment('card')" class="btn-green px-4 py-2 minimal-btn">Buy</button>
+                    </div>
+                </div>
+                <div class="price-card">
+                    <div class="flex-1">
+                        <span class="text-sky-500 text-[10px] font-bold opacity-50 uppercase block">Promotion</span>
+                        <span class="text-sky-400 text-sm font-black tracking-tight">Oasis Free Pass</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-black/40 rounded-xl p-1 pr-3">
+                        <span class="text-gray-400 text-xs font-black italic">0.00€</span>
+                        <button onclick="openPayment('promo')" class="btn-blue px-4 py-2 minimal-btn">Try</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- واجهات الدفع -->
+    <div id="layerPaymentCard" class="page-layer layer-hidden steam-gradient rounded-t-[35px] p-8 border-t border-red-500/20">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-white text-lg font-bold uppercase tracking-widest">Card</h2>
+            <button onclick="closePayment('card')" class="text-gray-500 text-xl">✕</button>
+        </div>
+        <div class="space-y-4 mb-10">
+            <input type="text" placeholder="Card Number" class="steam-input">
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" placeholder="MM/YY" class="steam-input">
+                <input type="password" placeholder="CVV" class="steam-input">
+            </div>
+        </div>
+        <button onclick="cardError()" class="btn-blue w-full py-4 minimal-btn">Pay</button>
+        <p id="cardErrorMsg" class="mt-4 text-red-500 text-[10px] font-bold text-center opacity-0 transition-opacity duration-300">Invalid Card Details.</p>
+    </div>
+
+    <div id="layerPaymentPromo" class="page-layer layer-hidden steam-gradient rounded-t-[35px] p-8 border-t border-sky-500/20">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-white text-lg font-bold uppercase tracking-widest">Promo</h2>
+            <button onclick="closePayment('promo')" class="text-gray-500 text-xl">✕</button>
+        </div>
+        <input type="password" id="promoInput" placeholder="Enter Code" class="steam-input text-xl font-black uppercase mb-8">
+        <button onclick="verifyPromo()" class="btn-blue w-full py-4 minimal-btn">Redeem</button>
+        <p id="promoError" class="text-red-500 text-[9px] mt-4 text-center opacity-0 font-black uppercase transition-opacity duration-300">Incorrect Promo Code</p>
+    </div>
+
+    <!-- شاشة النجاح -->
+    <div id="layerSuccess" class="page-layer layer-hidden bg-black justify-center items-center p-10 text-center">
+        <div id="welcomeUi" class="opacity-0 transition-all duration-1000 scale-90">
+            <h2 class="text-5xl font-black text-white mb-6 tracking-tighter italic">SUCCESS</h2>
+            <div class="w-full max-w-xs space-y-3 mx-auto">
+                <div class="flex justify-between text-[10px] text-sky-500 font-black uppercase tracking-[0.2em]">
+                    <span id="statusTxt">Injecting</span>
+                    <span id="percent">0%</span>
+                </div>
+                <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                    <div id="progressBar" class="w-0 h-full bg-sky-500"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="sndClick" src="click.wav" preload="auto"></audio>
+
+    <script>
+        const sndClick = document.getElementById('sndClick');
+        function playClickSound() {
+            sndClick.currentTime = 0;
+            sndClick.play().catch(() => {});
+        }
+
+        let currentUser = localStorage.getItem('oasis_user');
+        let currentAvatar = localStorage.getItem('oasis_avatar');
+
+        window.onload = () => {
+            updateUI();
+            // سبينر أولي لمدة 3 ثواني
+            setTimeout(() => {
+                const loader = document.getElementById('initialLoader');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    if(currentUser) {
+                        document.getElementById('layer2').classList.remove('layer-hidden');
+                    } else {
+                        const auth = document.getElementById('layerAuth');
+                        auth.style.opacity = '1';
+                        auth.style.pointerEvents = 'auto';
+                    }
+                }, 600);
+            }, 3000); 
+        };
+
+        function updateUI() {
+            if(currentUser) {
+                document.getElementById('displayUser').innerText = currentUser.toLowerCase();
+                document.getElementById('editUsername').value = currentUser;
+            }
+            const hAvatar = document.getElementById('headerAvatar');
+            const hPlaceholder = document.getElementById('headerAvatarPlaceholder');
+            const pPreview = document.getElementById('profilePreview');
+            const pPlaceholder = document.getElementById('profilePlaceholder');
+
+            if(currentAvatar) {
+                hAvatar.src = currentAvatar; hAvatar.classList.remove('hidden');
+                hPlaceholder.classList.add('hidden');
+                pPreview.src = currentAvatar; pPreview.classList.remove('hidden');
+                pPlaceholder.classList.add('hidden');
+            }
+        }
+
+        function submitAuth() {
+            const userInput = document.getElementById('regUser');
+            const user = userInput.value;
+            const btnText = document.getElementById('authBtnText');
+            const btnLoader = document.getElementById('authBtnLoader');
+            
+            if(!user.trim()) return;
+            
+            // إظهار السبينر داخل الزر
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+            userInput.disabled = true;
+
+            // تأخير لمدة 2 ثانية لمحاكاة الدخول
+            setTimeout(() => {
+                currentUser = user;
+                localStorage.setItem('oasis_user', user);
+                
+                document.getElementById('layerAuth').classList.add('layer-hidden');
+                document.getElementById('layer2').classList.remove('layer-hidden');
+                updateUI();
+                
+                // إعادة الزر لحالته الطبيعية (في حال تم تسجيل الخروج والعودة)
+                btnText.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+                userInput.disabled = false;
+            }, 2000);
+        }
+
+        function openProfile() {
+            document.getElementById('layer2').classList.add('layer-blurred');
+            document.getElementById('layerProfile').classList.remove('layer-hidden');
+        }
+
+        function closeProfile() {
+            document.getElementById('layerProfile').classList.add('layer-hidden');
+            document.getElementById('layer2').classList.remove('layer-blurred');
+        }
+
+        function handleAvatarChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => { currentAvatar = e.target.result; updateUI(); };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveProfile() {
+            const newName = document.getElementById('editUsername').value;
+            if(newName.trim()) {
+                currentUser = newName;
+                localStorage.setItem('oasis_user', currentUser);
+                if(currentAvatar) localStorage.setItem('oasis_avatar', currentAvatar);
+                updateUI(); closeProfile();
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        function openLayer3() {
+            document.getElementById('layer2').classList.add('layer-blurred');
+            document.getElementById('layer3').classList.remove('layer-hidden');
+        }
+
+        function closeLayer(n) {
+            document.getElementById('layer' + n).classList.add('layer-hidden');
+            document.getElementById('layer' + (n-1)).classList.remove('layer-blurred');
+        }
+
+        function openPayment(type) {
+            document.getElementById('layer3').classList.add('layer-blurred');
+            const id = type === 'card' ? 'layerPaymentCard' : 'layerPaymentPromo';
+            document.getElementById(id).classList.remove('layer-hidden');
+        }
+
+        function closePayment(type) {
+            const id = type === 'card' ? 'layerPaymentCard' : 'layerPaymentPromo';
+            document.getElementById(id).classList.add('layer-hidden');
+            document.getElementById('layer3').classList.remove('layer-blurred');
+        }
+
+        function cardError() {
+            const msg = document.getElementById('cardErrorMsg');
+            msg.style.opacity = "1";
+            setTimeout(() => msg.style.opacity = "0", 3000);
+        }
+
+        function verifyPromo() {
+            if (document.getElementById('promoInput').value.toLowerCase() === "yanifree") {
+                document.getElementById('layerPaymentPromo').classList.add('layer-hidden');
+                document.getElementById('layerSuccess').classList.remove('layer-hidden');
+                startDownload();
+            } else {
+                const err = document.getElementById('promoError');
+                err.style.opacity = "1";
+                setTimeout(() => err.style.opacity = "0", 2000);
+            }
+        }
+
+        function startDownload() {
+            const welcome = document.getElementById('welcomeUi');
+            const bar = document.getElementById('progressBar');
+            const percent = document.getElementById('percent');
+            const status = document.getElementById('statusTxt');
+            setTimeout(() => { welcome.style.opacity = "1"; welcome.style.transform = "scale(1)"; }, 300);
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 1.5;
+                if (progress >= 100) {
+                    progress = 100; clearInterval(interval);
+                    status.innerText = "ACCESS GRANTED";
+                    setTimeout(() => { window.location.href = "https://dl.apkvision.org/red-dead-redemption-netflix/RDR-NETFLIX-v1.53.61003005-vanilla-unlocked-apkvision.apks"; }, 800);
+                }
+                bar.style.width = progress + "%";
+                percent.innerText = Math.floor(progress) + "%";
+            }, 50); 
+        }
+    </script>
+</body>
+</html>
